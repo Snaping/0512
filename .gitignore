@@ -1,0 +1,28 @@
+# 通用
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+.env
+*.tmp
+
+# 依赖
+node_modules/
+__pycache__/
+venv/
+.pytest_cache/
+
+# 编译产物
+dist/
+build/
+target/
+*.class
+*.o
+*.exe
+bin/
+obj/
+.vs
+
+# 日志
+*.log
