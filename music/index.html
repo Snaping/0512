@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节奏大师 - 音乐节奏游戏</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 主菜单 -->
+        <div id="menu" class="screen active">
+            <div class="menu-container">
+                <h1 class="game-title">节奏大师</h1>
+                <p class="subtitle">Rhythm Master</p>
+                <div class="menu-buttons">
+                    <button class="menu-btn" id="startBtn">开始游戏</button>
+                    <button class="menu-btn" id="difficultyBtn">选择难度</button>
+                    <button class="menu-btn" id="skinBtn">皮肤设置</button>
+                    <button class="menu-btn" id="helpBtn">游戏帮助</button>
+                </div>
+                <div class="difficulty-display" id="difficultyDisplay">
+                    <span>当前难度: </span>
+                    <span class="difficulty-text" id="currentDifficulty">普通</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 难度选择 -->
+        <div id="difficulty-screen" class="screen">
+            <div class="menu-container">
+                <h2>选择难度</h2>
+                <div class="difficulty-options">
+                    <button class="difficulty-option" data-difficulty="easy">简单</button>
+                    <button class="difficulty-option" data-difficulty="normal">普通</button>
+                    <button class="difficulty-option" data-difficulty="hard">困难</button>
+                    <button class="difficulty-option" data-difficulty="expert">专家</button>
+                </div>
+                <div class="difficulty-info" id="difficultyInfo">
+                    <h3>普通难度</h3>
+                    <p>音符速度: 中等</p>
+                    <p>判定窗口: 标准</p>
+                    <p>连击加成: 1.0x</p>
+                </div>
+                <button class="back-btn" id="backFromDifficulty">返回</button>
+            </div>
+        </div>
+
+        <!-- 皮肤设置 -->
+        <div id="skin-screen" class="screen">
+            <div class="menu-container">
+                <h2>皮肤设置</h2>
+                <div class="skin-options">
+                    <div class="skin-option" data-skin="default">
+                        <div class="skin-preview default-skin"></div>
+                        <span>默认</span>
+                    </div>
+                    <div class="skin-option" data-skin="neon">
+                        <div class="skin-preview neon-skin"></div>
+                        <span>霓虹</span>
+                    </div>
+                    <div class="skin-option" data-skin="fire">
+                        <div class="skin-preview fire-skin"></div>
+                        <span>烈焰</span>
+                    </div>
+                    <div class="skin-option" data-skin="ocean">
+                        <div class="skin-preview ocean-skin"></div>
+                        <span>海洋</span>
+                    </div>
+                </div>
+                <button class="back-btn" id="backFromSkin">返回</button>
+            </div>
+        </div>
+
+        <!-- 帮助界面 -->
+        <div id="help-screen" class="screen">
+            <div class="menu-container">
+                <h2>游戏帮助</h2>
+                <div class="help-content">
+                    <h3>游戏规则</h3>
+                    <ul>
+                        <li>当音符下落到判定线时，点击对应键位</li>
+                        <li>按键: D, F, J, K 对应四个轨道</li>
+                        <li>点击精确度影响判定结果</li>
+                    </ul>
+                    <h3>判定说明</h3>
+                    <ul>
+                        <li>Perfect: 完美点击，最高分数</li>
+                        <li>Good: 良好点击，中等分数</li>
+                        <li>Miss: 错过音符，中断连击</li>
+                    </ul>
+                    <h3>难度说明</h3>
+                    <ul>
+                        <li>简单: 速度慢，判定宽松</li>
+                        <li>普通: 标准速度和判定</li>
+                        <li>困难: 速度快，判定严格</li>
+                        <li>专家: 极速，非常严格</li>
+                    </ul>
+                </div>
+                <button class="back-btn" id="backFromHelp">返回</button>
+            </div>
+        </div>
+
+        <!-- 游戏界面 -->
+        <div id="game-screen" class="screen">
+            <div class="game-container">
+                <div class="game-hud">
+                    <div class="hud-item">
+                        <span class="hud-label">分数</span>
+                        <span class="hud-value" id="score">0</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">连击</span>
+                        <span class="hud-value combo-value" id="combo">0</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">准确率</span>
+                        <span class="hud-value" id="accuracy">100%</span>
+                    </div>
+                    <button class="pause-btn" id="pauseBtn">暂停</button>
+                </div>
+                
+                <div class="game-area">
+                    <div class="tracks" id="tracks">
+                        <div class="track" data-index="0">
+                            <div class="track-label">D</div>
+                        </div>
+                        <div class="track" data-index="1">
+                            <div class="track-label">F</div>
+                        </div>
+                        <div class="track" data-index="2">
+                            <div class="track-label">J</div>
+                        </div>
+                        <div class="track" data-index="3">
+                            <div class="track-label">K</div>
+                        </div>
+                    </div>
+                    <div class="judgement-line" id="judgementLine"></div>
+                    <div class="effects-layer" id="effectsLayer"></div>
+                    <div class="judgement-display" id="judgementDisplay"></div>
+                </div>
+
+                <div class="key-hints">
+                    <div class="key-hint" data-key="D">D</div>
+                    <div class="key-hint" data-key="F">F</div>
+                    <div class="key-hint" data-key="J">J</div>
+                    <div class="key-hint" data-key="K">K</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 暂停界面 -->
+        <div id="pause-screen" class="screen overlay">
+            <div class="menu-container">
+                <h2>游戏暂停</h2>
+                <div class="menu-buttons">
+                    <button class="menu-btn" id="resumeBtn">继续游戏</button>
+                    <button class="menu-btn" id="restartBtn">重新开始</button>
+                    <button class="menu-btn" id="quitBtn">退出游戏</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结果界面 -->
+        <div id="result-screen" class="screen">
+            <div class="menu-container">
+                <h2>游戏结束</h2>
+                <div class="result-stats">
+                    <div class="result-item">
+                        <span class="result-label">最终分数</span>
+                        <span class="result-value" id="finalScore">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">最高连击</span>
+                        <span class="result-value" id="maxCombo">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">准确率</span>
+                        <span class="result-value" id="finalAccuracy">100%</span>
+                    </div>
+                    <div class="result-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label perfect">Perfect</span>
+                            <span class="breakdown-count" id="perfectCount">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label good">Good</span>
+                            <span class="breakdown-count" id="goodCount">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label miss">Miss</span>
+                            <span class="breakdown-count" id="missCount">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grade-display" id="gradeDisplay">S</div>
+                <div class="menu-buttons">
+                    <button class="menu-btn" id="playAgainBtn">再玩一次</button>
+                    <button class="menu-btn" id="backToMenuBtn">返回菜单</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
